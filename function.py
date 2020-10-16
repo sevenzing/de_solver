@@ -15,6 +15,8 @@ class Function:
             self.generate_X(start, stop, num)
         except TypeError:
             pass
+        if self.func:
+            self.generate_Y()
             
     def generate_X(self, start, stop, num):
         self.start = start

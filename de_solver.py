@@ -1,5 +1,6 @@
 from typing import List, Tuple
 from function import Function
+import logging
 
 class DifferentialEq:
     '''
@@ -15,9 +16,12 @@ class DifferentialEq:
         self.y_0 = y_0
         self.x_n = x_n
         self.n = n
-        self.h = (x_n - x_0) / n
         self.repr = _repr
 
+    @property
+    def h(self):
+        return (self.x_n - self.x_0) / self.n
+        
     def __str__(self):
         return self.repr
 
@@ -29,6 +33,7 @@ class Method:
         '''
         Returns method-derived function, LTE function, GTE function
         '''
+        logging.info(f"Solving eq with steps {diff_eq.h}")
         result_function = Function([], [])
         lte_function = Function([], [])
         gte_function = Function([], [])
@@ -80,10 +85,31 @@ class RungeKuttaMethod(Method):
 
         return y_i + h/6*(k_1i+2*k_2i+2*k_3i+k_4i)
 
+    def __str__(self):
+        return self.__class__.__name__
+
+
+class Manager:
+    def __init__(self, diff: DifferentialEq, methods: List[Method]):
+        self.diff = diff
+        self.methods = methods
+        self.functions = {}
+        self.update()
+
+    def update(self, x_0=None, y_0=None, x_n=None, n=None):
+        self.diff.x_0 = x_0 or self.diff.x_0
+        self.diff.y_0 = y_0 or self.diff.y_0
+        self.diff.x_n = x_n or self.diff.x_n
+        self.diff.n = n or self.diff.n
+
+        for method in self.methods:
+            self.functions[method.__str__()] = method.solve(self.diff)
+
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
     y_prime = lambda x,y: (y**2 +x*y - x**2) / x**2
     y = lambda x: x * (1 + x**2/3) / (1 - x**2/3)
     
     diff = DifferentialEq(y_prime, y, 1, 2, 1.5, 5, '')
-    print(RungeKuttaMethod().solve(diff,3)[2].Y)
+    Manager(diff, [RungeKuttaMethod()])
