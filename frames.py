@@ -9,16 +9,17 @@ from functools import partial
 import logging
 
 from function import Function
-
+from typing import List, Tuple
 
 class PlotTab(tk.Frame):
     '''
     Respresents a tab (вкладка) 
     '''
-    def __init__(self, parent: tk.Frame, label: str, callback_functions: Function):
+    def __init__(self, parent: tk.Frame, label: str, callback_functions: List[Function], legend: Tuple[str]=None):
         super().__init__(parent, width=750, height=400)
         self.label = label
-        self.func = callback_functions
+        self.funcs = callback_functions
+        self.legend = legend
 
         fig = Figure(figsize=(5, 5), dpi=100)
 
@@ -37,13 +38,16 @@ class PlotTab(tk.Frame):
     def update(self):
         logging.info(f'Updating graph on {self.__repr__()}')
         self.graph.clear()
+        
+        for i, func in enumerate(self.funcs):
+            X = func.X
+            Y = func.Y
+            self.graph.plot(X, Y)
 
-        X = self.func.X
-        Y = self.func.Y
-
-        self.graph.plot(X, Y)
         self.graph.set_xlabel("x")
         self.graph.set_ylabel("y")
+        if self.legend:
+            self.graph.legend(self.legend)
 
         self.canvas.draw()
         self.toolbar.update()
@@ -69,7 +73,6 @@ class SettingsArea(tk.Frame):
         btn.grid(column=0, columnspan=2, row=5, pady="25")
 
 
-
 class GraphArea(tk.Frame):
     def __init__(self, parent, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
@@ -81,12 +84,12 @@ class GraphArea(tk.Frame):
         
         logging.info('Created Notebook')
         
-        x_2 = Function(start=1, stop=20, num=100, func=lambda x: x**2)
-        x_3 = Function(start=1, stop=20, num=100, func=lambda x: x**3)
+        x_2 = Function(start=1, stop=5, num=100, func=lambda x: x**2)
+        x_3 = Function(start=1, stop=5, num=100, func=lambda x: x**3)
 
         self.tabs = [
-            PlotTab(self, 'label1', x_2), 
-            PlotTab(self, 'label2', x_3)
+            PlotTab(self, 'label1', [x_2, x_3], legend=('x^2', 'x^3')), 
+            PlotTab(self, 'label2', [x_3])
             ]
         
         logging.info('Created tabs')
