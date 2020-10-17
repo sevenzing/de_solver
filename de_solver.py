@@ -135,8 +135,11 @@ class Manager:
     def __init__(self, diff: DifferentialEq, methods: List[Method]):
         self.diff = diff
         self.methods = methods
-        self.functions: Dict[List[Function]] = {str(method):(Function(), Function(), Function()) for method in methods }
-        self.solution = Function()
+        self.functions: Dict[List[Function]] = {
+            str(method):[Function(name=str(method)) for _ in range(len(methods))] 
+                for method in methods 
+            }
+        self.solution = Function(name='Analytical solution')
         self.update()
 
     def update(self, x_0=None, y_0=None, x_n=None, n=None, n_start=None, n_end=None):
