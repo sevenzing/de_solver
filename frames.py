@@ -8,7 +8,8 @@ matplotlib.use("TkAgg")
 from functools import partial
 import logging
 
-from de_solver import DifferentialEq, Manager
+from de_solver import DifferentialEq
+from manager import Manager
 from function import Function
 from typing import List, Tuple
 import constants
