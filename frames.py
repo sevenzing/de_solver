@@ -18,11 +18,10 @@ class PlotTab(tk.Frame):
     '''
     Respresents a tab (вкладка) 
     '''
-    def __init__(self, parent: tk.Frame, label: str, functions: List[Function], legend: Tuple[str]=None):
+    def __init__(self, parent: tk.Frame, label: str, functions: List[Function]):
         super().__init__(parent, width=750, height=600)
         self.label = label
         self.funcs = functions
-        self.legend = legend
 
         fig = Figure(figsize=(5, 5), dpi=100)
         
@@ -42,16 +41,19 @@ class PlotTab(tk.Frame):
         logging.info(f'Updating graph on {self.__repr__()}')
         self.graph.clear()
         
+        legend = []
         # show only non-hide functions
         for i, func in enumerate(filter(lambda f: not f.hide, self.funcs)):
             X = func.X
             Y = func.Y
             self.graph.plot(X, Y)
+            if func.name:
+                legend.append(func.name)
 
         self.graph.set_xlabel("x")
         self.graph.set_ylabel("y")
-        if self.legend:
-            self.graph.legend(self.legend)
+        
+        self.graph.legend(legend)
 
         self.canvas.draw()
         self.toolbar.update()
@@ -163,15 +165,14 @@ class GraphArea(tk.Frame):
         anal_solution = manager.solution
         
         self.tabs = [
-            PlotTab(self, 'Solutions', [anal_solution], legend=['Analytical solution']), 
-            PlotTab(self, 'LTE', [], legend=[]),
-            PlotTab(self, 'GTE', [], legend=[]),
+            PlotTab(self, 'Solutions', [anal_solution]), 
+            PlotTab(self, 'LTE', []),
+            PlotTab(self, 'GTE', []),
             ]
         for method in manager.functions:
             funcs = manager.functions[method]
             for i in range(len(funcs)):
                 self.tabs[i].funcs.append(funcs[i])
-                self.tabs[i].legend.append(method)
 
         logging.info('Created tabs')
         
