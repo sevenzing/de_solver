@@ -68,7 +68,7 @@ class SettingsArea(tk.Frame):
         self.diff_eq: DifferentialEq = manager.diff
         self.manager = manager
 
-        title = ttk.Label(self, text=self.diff_eq.repr, font=("Arial", 20))
+        title = ttk.Label(self, text=f"Solving {self.diff_eq.repr}", font=("Arial", 18))
         title.grid(column=0)
 
         ttk.Label(self, text="x_0")
@@ -87,11 +87,11 @@ class SettingsArea(tk.Frame):
         self.n = ttk.Entry(self)
         self.n.insert(tk.END, self.diff_eq.n)
         
-        ttk.Label(self, text="n_0")
+        ttk.Label(self, text="n_0 (for GTE)")
         self.n_start = ttk.Entry(self)
         self.n_start.insert(tk.END, self.diff_eq.n_start)
 
-        ttk.Label(self, text="N")
+        ttk.Label(self, text="N (for GTE)")
         self.n_end = ttk.Entry(self)
         self.n_end.insert(tk.END, self.diff_eq.n_end)
 
