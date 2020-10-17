@@ -5,12 +5,12 @@ import constants
 from frames import SettingsArea, GraphArea
 
 from de_solver import (
-    DifferentialEq, 
-    Manager, 
+    DifferentialEq,  
     EulerMethod,
     ImprovedEulerMethod,
     RungeKuttaMethod,
     )
+from manager import Manager
 import logging
 
 class Root(tk.Tk):
@@ -38,7 +38,9 @@ class Root(tk.Tk):
             EulerMethod(color='red'),
             ImprovedEulerMethod(color='orange'),
             RungeKuttaMethod(color='green'),
-            ])
+            ],
+            solution_color='blue',
+            )
         m.update()
         return m
 
