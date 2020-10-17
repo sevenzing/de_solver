@@ -46,7 +46,7 @@ class PlotTab(tk.Frame):
         for i, func in enumerate(filter(lambda f: not f.hide, self.funcs)):
             X = func.X
             Y = func.Y
-            self.graph.plot(X, Y)
+            self.graph.plot(X, Y, color=func.color)
             if func.name:
                 legend.append(func.name)
 

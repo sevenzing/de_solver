@@ -35,9 +35,9 @@ class Root(tk.Tk):
 
     def get_manager(self) -> Manager:
         m = Manager(self.diff_eq, [
-            EulerMethod(),
-            ImprovedEulerMethod(),
-            RungeKuttaMethod(),
+            EulerMethod(color='red'),
+            ImprovedEulerMethod(color='orange'),
+            RungeKuttaMethod(color='green'),
             ])
         m.update()
         return m

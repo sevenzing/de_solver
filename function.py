@@ -4,7 +4,12 @@ from inspect import getmembers
 import logging
 
 class Function:
-    def __init__(self, domain=None, values=None, func=None, start=None, stop=None, num=None, hide=False, name=None):
+    def __init__(
+        self, domain=None, values=None, 
+        func=None, start=None, stop=None, 
+        num=None, hide=False, 
+        name=None, color=None
+        ):
         self.func = func
         self.X = np.array(domain)
         self.Y = np.array(values)
@@ -13,6 +18,7 @@ class Function:
         self.num = num
         self.hide = hide
         self.name = name
+        self.color = color
 
         try:
             self.generate_X(start, stop, num)

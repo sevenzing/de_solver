@@ -36,6 +36,12 @@ class DifferentialEq:
         return self.repr
 
 class Method:
+    def __init__(self, color=None):
+        '''
+        Represenst interface of iteration method
+        '''
+        self.color = color # color of functions of this method
+
     def get_next_value(self, f, x_i, y_i, h):
         raise NotImplementedError('you should implement it first')
     
@@ -132,14 +138,14 @@ class Manager:
     '''
     Class for managing changes of values of diff. eq
     '''
-    def __init__(self, diff: DifferentialEq, methods: List[Method]):
+    def __init__(self, diff: DifferentialEq, methods: List[Method], solution_color='blue'):
         self.diff = diff
         self.methods = methods
         self.functions: Dict[List[Function]] = {
-            str(method):[Function(name=str(method)) for _ in range(len(methods))] 
+            str(method):[Function(name=str(method), color=method.color) for _ in range(len(methods))] 
                 for method in methods 
             }
-        self.solution = Function(name='Analytical solution')
+        self.solution = Function(name='Analytical solution', color=solution_color)
         self.update()
 
     def update(self, x_0=None, y_0=None, x_n=None, n=None, n_start=None, n_end=None):
