@@ -1,7 +1,7 @@
 from typing import List, Tuple
 from function import Function
 import logging
-from typing import Dict, List
+from typing import Dict, List, Tuple
 from copy import deepcopy
 
 
@@ -18,7 +18,6 @@ class DifferentialEq:
         self.x_0 = x_0
         self.y_0 = y_0
         self.x_n = x_n
-        self.n_initital = n
         self.n = n
         self.n_start = n_start
         self.n_end = n_end
@@ -50,7 +49,7 @@ class Method:
         Returns tuple of (method-derived function, LTE function, GTE function)
         '''
         # getting result function and lte
-        result, lte, _ = self.__solve_de(
+        result, lte, _ = self.__execute_method(
             diff.f, 
             diff.solution,
             diff.x_0,
@@ -63,7 +62,7 @@ class Method:
         # calculate gte for all n from `n_start` to `n_end`
         gte = Function()
         for n in range(diff.n_start, diff.n_end):
-            _, _, gte_values = self.__solve_de(
+            _, _, gte_values = self.__execute_method(
                 diff.f, 
                 diff.solution,
                 diff.x_0,
@@ -77,7 +76,10 @@ class Method:
         return result, lte, gte
         
 
-    def __solve_de(self, f, y_solution_func, x_0, y_0, x_n, n, precision=4):
+    def __execute_method(self, f, y_solution_func, x_0, y_0, x_n, n, precision=4) -> Tuple[Function]:
+        '''
+        Basically execute iteration method
+        '''
         h = (x_n - x_0) / n
         assert(h > 0, 'x_n should be greater than x_0')
         logging.debug(f"Solving eq with steps {h}")
@@ -97,7 +99,11 @@ class Method:
             # execute method
             y_i = self.get_next_value(f, x_i, y_i, h)
             # errors
-            LTE = abs(y_solution_func(x_i + h) - self.get_next_value(f, x_i, y_solution_func(x_i), h))
+            LTE = abs(y_solution_func(x_i + h) - \
+                self.get_next_value(
+                    f, x_i, y_solution_func(x_i), h
+                    )
+                )
             GTE = abs(y_solution_func(x_i + h) - y_i)
             # step 
             x_i  = round(x_i + h, precision)

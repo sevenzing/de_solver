@@ -111,7 +111,7 @@ class SettingsArea(tk.Frame):
         self.available_functions = {}
         for method in manager.methods:
             show_method = tk.BooleanVar(value=True)
-            check_box = ttk.Checkbutton(self, text=str(method), command=self.hide_functions, variable=show_method)
+            check_box = ttk.Checkbutton(self, text=str(method), command=self.hide_methods, variable=show_method)
             check_box.grid(column=0, row=len(self.winfo_children()), sticky=(tk.W, tk.E))
             self.available_functions[str(method)] = show_method
 
@@ -149,8 +149,8 @@ class SettingsArea(tk.Frame):
         
         self.__update_all_tabs()
 
-    def hide_functions(self):
-        self.manager.hide_functions({m: not v.get() for m, v in self.available_functions.items()})
+    def hide_methods(self):
+        self.manager.hide_methods({m: not v.get() for m, v in self.available_functions.items()})
         self.__update_all_tabs()
 
 class GraphArea(tk.Frame):

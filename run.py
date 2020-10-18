@@ -27,16 +27,16 @@ class Root(tk.Tk):
         
         manager = self.get_manager()
 
-        graph = GraphArea(self, manager)
-        graph.grid(column=1, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
+        self.graph = GraphArea(self, manager)
+        self.graph.grid(column=1, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
         
-        settings = SettingsArea(self, graph.tabs_list, manager)
-        settings.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E, tk.S), pady='25', padx='25')
+        self.settings = SettingsArea(self, self.graph.tabs_list, manager)
+        self.settings.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E, tk.S), pady='25', padx='25')
 
     def get_manager(self) -> Manager:
         m = Manager(self.diff_eq, [
             EulerMethod(color='red'),
-            ImprovedEulerMethod(color='orange'),
+              ImprovedEulerMethod(color='orange'),
             RungeKuttaMethod(color='green'),
             ],
             solution_color='blue',

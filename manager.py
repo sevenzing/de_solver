@@ -8,7 +8,7 @@ class Manager:
     '''
     Class for managing changes of values of diff. eq
     '''
-    def __init__(self, diff: DifferentialEq, methods: List[Method], solution_color='blue'):
+    def __init__(self, diff: DifferentialEq, methods: List[Method], solution_color):
         self.diff = diff
         self.methods = methods
         self.functions: Dict[List[Function]] = {
@@ -41,7 +41,8 @@ class Manager:
         new_solution = Function(func=self.diff.solution, start=self.diff.x_0, stop=self.diff.x_n, num=self.diff.n)
         self.solution.assign(new_solution)
 
-    def hide_functions(self, methods: Dict[str, bool]):
+    def hide_methods(self, methods: Dict[str, bool]):
         for method in methods:
             for func in self.functions[method]:
                 func.hide = methods[method]
+

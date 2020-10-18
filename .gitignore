@@ -1,2 +1,4 @@
 __pycache__
 __*.py
+*.pdf
+*.pyns
