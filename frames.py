@@ -172,7 +172,7 @@ class GraphArea(tk.Frame):
             ]
         for method in manager.functions:
             funcs = manager.functions[method]
-            for i in range(len(funcs)):
+            for i in range(len(self.tabs)):
                 self.tabs[i].funcs.append(funcs[i])
 
         logging.info('Created tabs')

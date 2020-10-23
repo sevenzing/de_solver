@@ -1,4 +1,5 @@
 __pycache__
 __*.py
 *.pdf
+!practicum_review.pdf
 *.pyns

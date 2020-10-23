@@ -35,12 +35,16 @@ class DifferentialEq:
         return self.repr
 
 class Method:
-    def __init__(self, color=None):
+    def __init__(self, color=None, title=None):
         '''
         Represenst interface of iteration method
         '''
         self.color = color # color of functions of this method
-
+        if title:
+            self.title = title
+        else:
+            self.title = self.__class__.__name__
+        
     def get_next_value(self, f, x_i, y_i, h):
         raise NotImplementedError('you should implement it first')
     
@@ -61,7 +65,7 @@ class Method:
         
         # calculate gte for all n from `n_start` to `n_end`
         gte = Function()
-        for n in range(diff.n_start, diff.n_end):
+        for n in range(diff.n_start, diff.n_end + 1):
             _, _, gte_values = self.__execute_method(
                 diff.f, 
                 diff.solution,
@@ -75,6 +79,8 @@ class Method:
         
         return result, lte, gte
         
+    def execute_method(self, *args, **kwargs):
+        return self.__execute_method(*args, **kwargs)
 
     def __execute_method(self, f, y_solution_func, x_0, y_0, x_n, n, precision=4) -> Tuple[Function]:
         '''
@@ -82,7 +88,8 @@ class Method:
         '''
         h = (x_n - x_0) / n
         assert(h > 0, 'x_n should be greater than x_0')
-        logging.debug(f"Solving eq with steps {h}")
+        
+        logging.debug(f"Solving eq with steps {h}. y_0: {y_0} x_n: {x_n}, x_0: {x_0}, n: {n}")
         result_function = Function([], [])
         lte_function = Function([], [])
         gte_function = Function([], [])
@@ -90,14 +97,16 @@ class Method:
         y_i = y_0
         LTE = 0
         GTE = 0
-        while x_i <= x_n:
-            # add values to result functions 
+        for i in range(1, n + 2):
+            # add values to result functions
+            
             result_function.append(x_i, y_i)
             lte_function.append(x_i, LTE)
             gte_function.append(x_i, GTE)
             
             # execute method
             y_i = self.get_next_value(f, x_i, y_i, h)
+            
             # errors
             LTE = abs(y_solution_func(x_i + h) - \
                 self.get_next_value(
@@ -106,13 +115,14 @@ class Method:
                 )
             GTE = abs(y_solution_func(x_i + h) - y_i)
             # step 
-            x_i  = round(x_i + h, precision)
+            x_i = round(x_0 + i * h, precision)
             y_init = y_solution_func(x_i)
+        
         return (result_function, lte_function, gte_function)
 
 
     def __str__(self):
-        return self.__class__.__name__
+        return self.title
 
 class EulerMethod(Method):
     def get_next_value(self, f, x_i, y_i, h):
@@ -136,4 +146,13 @@ class RungeKuttaMethod(Method):
         k_3i = f(x_i + h/2, y_i + h/2*k_2i)
         k_4i = f(x_i + h, y_i + h*k_3i)
 
+        return y_i + h/6*(k_1i+2*k_2i+2*k_3i+k_4i)
+
+
+class SampleMethod(Method):
+    def get_next_value(self, f, x_i, y_i, h):
+        k_1i = f(x_i, y_i)
+        k_2i = f(x_i + h/2, y_i + h/2*k_1i)
+        k_3i = f(x_i + h/2, y_i + h/2*k_2i)
+        k_4i = 60
         return y_i + h/6*(k_1i+2*k_2i+2*k_3i+k_4i)

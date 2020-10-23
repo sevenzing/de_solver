@@ -9,6 +9,7 @@ from de_solver import (
     EulerMethod,
     ImprovedEulerMethod,
     RungeKuttaMethod,
+    SampleMethod,
     )
 from manager import Manager
 import logging
@@ -36,8 +37,12 @@ class Root(tk.Tk):
     def get_manager(self) -> Manager:
         m = Manager(self.diff_eq, [
             EulerMethod(color='red'),
-              ImprovedEulerMethod(color='orange'),
+            ImprovedEulerMethod(color='orange'),
             RungeKuttaMethod(color='green'),
+            SampleMethod(
+                color='black', 
+                title='My new method'
+                ),
             ],
             solution_color='blue',
             )
@@ -58,6 +63,5 @@ if __name__ == "__main__":
     root = Root(diff)
     style = ThemedStyle(root)
     style.set_theme("breeze")
+    
     root.mainloop()
-
-

@@ -12,7 +12,7 @@ class Manager:
         self.diff = diff
         self.methods = methods
         self.functions: Dict[List[Function]] = {
-            str(method):[Function(name=str(method), color=method.color) for _ in range(len(methods))] 
+            str(method):[Function(name=str(method), color=method.color) for _ in range(3)] 
                 for method in methods 
             }
         self.solution = Function(name='Analytical solution', color=solution_color)
